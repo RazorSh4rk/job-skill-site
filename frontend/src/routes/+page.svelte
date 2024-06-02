@@ -63,7 +63,7 @@
 				<p>things you still have to learn</p>
 			</div>
 			<svelte:fragment slot="trail">
-				<a href="github.com" target="_blank">
+				<a href="https://github.com/RazorSh4rk/job-skill-site" target="_blank">
 					<Icon src={AiFillGithub} size="32px" />
 				</a>
 			</svelte:fragment>
