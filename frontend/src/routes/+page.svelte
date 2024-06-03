@@ -57,7 +57,7 @@
 	<div class="col-span-5 md:col-span-3 md:col-start-2">
 		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 			<svelte:fragment slot="lead">
-				<img src={asta} alt="logo" width="100px" />
+					<img src={asta} alt="logo" width="100wv" />
 			</svelte:fragment>
 			<div>
 				<h1 class="h1 mb-4">Madamada!</h1>
@@ -131,8 +131,8 @@
 	{/if}
 </div>
 
-<!-- <style>
+<style>
 	div {
 		border: 1px solid red;
 	}
-</style> -->
+</style>
