@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 
+	import asta from "$lib/assets/asta.webp"
 	import { setModeCurrent } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
@@ -56,7 +57,7 @@
 	<div class="col-span-5 md:col-span-3 md:col-start-2">
 		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 			<svelte:fragment slot="lead">
-				<Icon src={AiTwotoneBook} size="32px" />
+				<img src={asta} alt="logo" width="100px" />
 			</svelte:fragment>
 			<div>
 				<h1 class="h1 mb-4">Madamada!</h1>
