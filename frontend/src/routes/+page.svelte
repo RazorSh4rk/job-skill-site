@@ -6,7 +6,7 @@
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { Icon } from 'svelte-icons-pack';
-	import { AiTwotoneBook, AiFillGithub } from 'svelte-icons-pack/ai';
+	import { AiFillGithub } from 'svelte-icons-pack/ai';
 	import { TrOutlineBrandGolang, TrOutlineBrandSvelte } from 'svelte-icons-pack/tr';
 	import { SiBun, SiGooglecloud, SiMongodb } from 'svelte-icons-pack/si';
 
@@ -51,6 +51,24 @@
 			};
 		});
 	};
+
+	const hasIcon = (lang) => {
+		const tech = lang.replace(" developer", "").replace(" engineer", "").replace("golang", "go")
+		const sSheets = document.styleSheets
+		for(let s of sSheets) {
+			const rules = s.rules
+			for(let r of rules) {
+				if(r.cssText.includes(tech))
+					return true
+			}
+		}
+		return false
+	}
+
+	const getIcon = (lang) => {
+		const tech = lang.replace(" developer", "").replace(" engineer", "").replace("golang", "go")
+		return `devicon-${tech}-plain`
+	}
 </script>
 
 <div class="grid w-screen md:grid-cols-5">
@@ -99,8 +117,11 @@
 		{:else}
 			<div class="m-auto w-3/4">
 				{#each tagCloud as tag}
-					<button class="variant-filled badge btn m-2 inline-block p-2" on:click={loadHeatmap(tag)}>
-						{tag}
+					<button class="btn variant-filled badge m-2 inline-block p-2" on:click={loadHeatmap(tag)}>
+						{#if hasIcon(tag)}
+							<i class={getIcon(tag)}></i>
+						{/if}
+						{tag.replace(" developer", "").replace(" engineer", "")}
 					</button>
 				{/each}
 			</div>
