@@ -18,6 +18,8 @@ type InterpretedListing struct {
 	Company    string             `json:"company" bson:"company"`
 	CompanyURL string             `json:"companyUrl" bson:"companyUrl"`
 	Location   string             `json:"location" bson:"location"`
+	Latitude   string             `json:"latitude" bson:"latitude"`
+	Longitude  string             `json:"longitude" bson:"longitude"`
 	Techstack  []string           `json:"techstack" bson:"techstack"`
 }
 

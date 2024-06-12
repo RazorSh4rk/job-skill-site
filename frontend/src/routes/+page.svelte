@@ -1,7 +1,10 @@
 <script>
+	const mapbox =
+		'pk.eyJ1IjoicmF6b3JzaDRyayIsImEiOiJjbHgyamk4Y3YwZmRiMm1xM2R4bnZ1bDRtIn0.Bt7VcZwdbtfbiDu77xky6g';
+
 	import { onMount } from 'svelte';
 
-	import asta from "$lib/assets/asta.webp"
+	import asta from '$lib/assets/asta.webp';
 	import { setModeCurrent } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
@@ -9,15 +12,21 @@
 	import { AiFillGithub } from 'svelte-icons-pack/ai';
 	import { TrOutlineBrandGolang, TrOutlineBrandSvelte } from 'svelte-icons-pack/tr';
 	import { SiBun, SiGooglecloud, SiMongodb } from 'svelte-icons-pack/si';
+	import { Map, Geocoder, Marker, controls } from '@beyonk/svelte-mapbox';
 
 	let tagCloud = [];
 	let hMap = [];
 	let topValues = [];
+	let mapComponent;
+	let allRecords = [];
+	let selectedTag = '';
 
 	let tagsVisible = false;
 
 	onMount(() => {
 		setModeCurrent(false);
+		mapComponent.setCenter([-98.43313, 39.50944]);
+		mapComponent.setZoom(3);
 
 		fetch('https://indeed-backend-xwdwqsvnia-ue.a.run.app/names')
 			.then((res) => res.json())
@@ -26,6 +35,8 @@
 	});
 
 	const loadHeatmap = (collection) => {
+		selectedTag = collection;
+
 		let url = `https://indeed-backend-xwdwqsvnia-ue.a.run.app/heatmap/${collection.replace(' ', '_')}`;
 		fetch(url)
 			.then((res) => res.json())
@@ -33,6 +44,14 @@
 				hMap = res.heatmap;
 				minifyHeatmap();
 				tagsVisible = true;
+			})
+			.catch((err) => console.log(err));
+
+		let allUrl = `https://indeed-backend-xwdwqsvnia-ue.a.run.app/records/${collection.replace(' ', '_')}`;
+		fetch(allUrl)
+			.then((res) => res.json())
+			.then((res) => {
+				allRecords = res.records.filter((el) => el.longitude && el.latitude);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -53,29 +72,32 @@
 	};
 
 	const hasIcon = (lang) => {
-		const tech = lang.replace(" developer", "").replace(" engineer", "").replace("golang", "go")
-		const sSheets = document.styleSheets
-		for(let s of sSheets) {
-			const rules = s.rules
-			for(let r of rules) {
-				if(r.cssText.includes(tech))
-					return true
+		const tech = lang.replace(' developer', '').replace(' engineer', '').replace('golang', 'go');
+		try {
+			const sSheets = document.styleSheets;
+			for (let s of sSheets) {
+				const rules = s.cssRules;
+				for (let r of rules) {
+					if (r.cssText.includes(tech)) return true;
+				}
 			}
+			return false;
+		} catch (err) {
+			return false;
 		}
-		return false
-	}
+	};
 
 	const getIcon = (lang) => {
-		const tech = lang.replace(" developer", "").replace(" engineer", "").replace("golang", "go")
-		return `devicon-${tech}-plain`
-	}
+		const tech = lang.replace(' developer', '').replace(' engineer', '').replace('golang', 'go');
+		return `devicon-${tech}-plain`;
+	};
 </script>
 
 <div class="grid w-screen md:grid-cols-5">
 	<div class="col-span-5 md:col-span-3 md:col-start-2">
 		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 			<svelte:fragment slot="lead">
-					<img src={asta} alt="logo" width="100wv" />
+				<img src={asta} alt="logo" width="100wv" />
 			</svelte:fragment>
 			<div>
 				<h1 class="h1 mb-4">Madamada!</h1>
@@ -117,17 +139,17 @@
 		{:else}
 			<div class="m-auto w-3/4">
 				{#each tagCloud as tag}
-					<button class="btn variant-filled badge m-2 inline-block p-2" on:click={loadHeatmap(tag)}>
+					<button class="variant-filled badge btn m-2 inline-block p-2" on:click={loadHeatmap(tag)}>
 						{#if hasIcon(tag)}
 							<i class={getIcon(tag)}></i>
 						{/if}
-						{tag.replace(" developer", "").replace(" engineer", "")}
+						{tag.replace(' developer', '').replace(' engineer', '')}
 					</button>
 				{/each}
 			</div>
 		{/if}
 
-		<hr class="mt-2 !border-t-8 !border-double"/>
+		<hr class="mt-2 !border-t-8 !border-double" />
 	</div>
 
 	{#if tagsVisible}
@@ -150,6 +172,20 @@
 			{/if}
 		</div>
 	{/if}
+	<div class="col-span-5 overflow-scroll pt-4 md:col-span-3 md:col-start-2">
+		<div class="mt-8 h-80 w-full p-2 md:h-96">
+			<Map
+				accessToken={mapbox}
+				bind:this={mapComponent}
+				on:recentre={(e) => console.log(e.detail.center.lat, e.detail.center.lng)}
+				options={{ scrollZoom: false, doubleClickZoom: false, dragPan: false }}
+			>
+				{#each allRecords as record}
+					<Marker lng={record.longitude} lat={record.latitude} popup={false}></Marker>
+				{/each}
+			</Map>
+		</div>
+	</div>
 </div>
 
 <!-- <style>
