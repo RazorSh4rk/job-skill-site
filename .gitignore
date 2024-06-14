@@ -1,1 +1,6 @@
 backend/.env
+indeed/.env
+frontend/.env
+indeed/selenium-server.jar
+indeed/geckodriver
+indeed/chromedriver

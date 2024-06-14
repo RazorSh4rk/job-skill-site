@@ -1,7 +1,5 @@
 <script>
-	const mapbox =
-		'pk.eyJ1IjoicmF6b3JzaDRyayIsImEiOiJjbHgyamk4Y3YwZmRiMm1xM2R4bnZ1bDRtIn0.Bt7VcZwdbtfbiDu77xky6g';
-
+	
 	import { onMount } from 'svelte';
 
 	import asta from '$lib/assets/asta.webp';
@@ -172,7 +170,7 @@
 			{/if}
 		</div>
 	{/if}
-	<div class="col-span-5 overflow-scroll pt-4 md:col-span-3 md:col-start-2">
+	<!-- <div class="col-span-5 overflow-scroll pt-4 md:col-span-3 md:col-start-2">
 		<div class="mt-8 h-80 w-full p-2 md:h-96">
 			<Map
 				accessToken={mapbox}
@@ -185,7 +183,7 @@
 				{/each}
 			</Map>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 <!-- <style>
